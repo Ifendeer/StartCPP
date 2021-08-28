@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "release O2, build c++ file",
+            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "args": [
+                "-g0",
+                "-mwin32",
+                "-I${workspaceFolder}\\include",
+                "-L${workspaceFolder}\\lib",
+                "-O2",
+                "-o",
+                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "-static",
+                "${file}",
+                "-lgdi32"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "compiler: C:\\msys64\\mingw64\\bin\\g++.exe"
+        },
+        {
+            "type": "cppbuild",
+            "label": "debug, build c++ file",
+            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "-mwin32",
+                "-I${workspaceFolder}\\include",
+                "-L${workspaceFolder}\\lib",
+                "-o",
+                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "${file}",
+                "-lgdi32"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "compiler: C:\\msys64\\mingw64\\bin\\g++.exe"
+        }
+    ]
+}

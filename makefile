@@ -1,33 +1,23 @@
 #------------------------------
-include_Dir = -Iinclude -Isrc/headers
-lib_Dir = -Llib
 Compiler = g++
-#------------------------------
-sources = src/sources/*
-resource_Dir = resources
+AddDirectories = -Iinclude -Llib
+sources = src/sources/* lib/*
 libs = 
-Output_Name = HelloWorld.exe
+Output_Name = source.exe
 #------------------------------
 
 
 all: release
 
-release: clean
-	echo -------------------------------- >> result.txt
-	echo Copying resources to release folder:>> result.txt
-	echo mkdir $@ >> result.txt
-	mkdir $@ >> result.txt
-	echo xcopy $(resource_Dir) $@ /e /i /q>> result.txt
-	xcopy $(resource_Dir) $@ /e /i /q>> result.txt
-	echo -------------------------------- >> result.txt
-	echo Compiling: >> result.txt
-	echo g++ -g0 -o "$@/$(Output_Name)" $(include_Dir) $(lib_Dir) $(sources) $(libs) >> result.txt
-	$(Compiler) -g0 -o "$@/$(Output_Name)" $(include_Dir) $(lib_Dir) $(sources) $(libs) >> result.txt
-	echo -------------------------------- >> result.txt
-	if exist "$@/$(Output_Name)" (echo Build Succeessful. >> result.txt & start $@/"$(Output_Name)") else ( echo Build Failed Gracefully! >> result.txt )
-clean:
-	echo Cleaning previous build:> result.txt & echo rd /s /q release>> result.txt & rd /s /q release>> result.txt & @echo off
+release:
+	powershell 'if((Test-Path "resources") -and !(Test-Path "bin\resources")){Copy-item -Recurse -Path "resources" -Destination "bin"}'
+	powershell '&{ $(Compiler) -g0 -mwin32 -O2 $(AddDirectories) -o "bin/$(Output_Name)" -static ${sources} ${libs}}2>&1>result.txt'
+	powershell 'if(Test-Path "bin\$(Output_Name)"){ Start-Process -FilePath "bin\$(Output_Name)" -WorkingDirectory "bin" }else{ Write-Output "bin\$(Output_Name) not found" }'
 run:
-	if exist "release/$(Output_Name)" (start release/"$(Output_Name)" > errorLog.txt ) else ( echo Could not run: File doesnt exist! > errorLog.txt )
-cleanOnly:
-	rd /s /q release & del errorLog.txt & del result.txt & @echo off
+	powershell 'if(Test-Path "bin\$(Output_Name)"){ Start-Process -FilePath "bin\$(Output_Name)" -WorkingDirectory "bin" }else{ Write-Output "bin\$(Output_Name) not found" }'
+clean:
+	powershell 'if(Test-Path "bin"){Remove-Item -LiteralPath "bin" -Recurse}'
+	powershell 'New-Item -ItemType Directory -Path "bin" | Out-Null'
+pushrsc:
+	powershell 'if(Test-Path "bin\resources"){Remove-Item -LiteralPath "bin\resources" -Recurse}'
+	powershell 'if(Test-Path "resources"){Copy-item -Recurse -Path "resources" -Destination "bin"}'

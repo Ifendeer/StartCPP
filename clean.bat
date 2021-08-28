@@ -1,2 +1,2 @@
 @echo off
-mingw32-make cleanOnly --directory="%~dp0
+mingw32-make clean --silent --directory="%~dp0

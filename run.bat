@@ -1,2 +1,2 @@
 @echo off
-mingw32-make run --directory="%~dp0
+mingw32-make run --silent --directory="%~dp0
